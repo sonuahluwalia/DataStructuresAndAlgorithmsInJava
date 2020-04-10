@@ -1,3 +1,4 @@
+package chapter1;
 
 public class Ratio {
 	protected int numerator; // numerator of ratio

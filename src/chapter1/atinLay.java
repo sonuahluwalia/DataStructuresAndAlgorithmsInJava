@@ -1,3 +1,4 @@
+package chapter1;
 
 public class atinLay {
 // a pig latin translator for nine words
