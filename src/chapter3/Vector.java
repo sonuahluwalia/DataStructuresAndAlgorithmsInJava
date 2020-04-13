@@ -52,11 +52,12 @@ public class Vector extends AbstractList implements Cloneable {
 		int index = 0;
 		boolean flag = false;
 		while (index < elementCount) {
-			index++;
-			if (element.equals(elementData[elementCount])) {
+			if (element.equals(elementData[index])) {
 				flag = true;
 				break;
 			}
+			index++;
+			
 		}
 		if(flag) {
 			remove(index);

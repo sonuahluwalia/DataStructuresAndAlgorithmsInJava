@@ -5,7 +5,7 @@ import java.util.AbstractList;
 import chapter1.Assert;
 
 public class Vector<E> extends AbstractList<E> implements Cloneable {
-	private Object elementData[];
+	protected Object elementData[];
 	// the data
 	protected int elementCount;
 	// number of elements in vector
@@ -18,11 +18,15 @@ public class Vector<E> extends AbstractList<E> implements Cloneable {
 	public Vector() {
 		elementData = new Object[defaultCapacity];
 		elementCount = 0;
-		
+
 	}
 	// post: constructs a vector with capacity for 10 elements
 
 	public Vector(int initialCapacity) {
+		Assert.pre(initialCapacity >= 0, "Nonnegative capacity.");
+		elementData = new Object[initialCapacity];
+		elementCount = 0;
+
 	}
 	// pre: initialCapacity >= 0
 	// post: constructs an empty vector with initialCapacity capacity
@@ -31,6 +35,10 @@ public class Vector<E> extends AbstractList<E> implements Cloneable {
 		// pre: initialCapacity >= 0, capacityIncr >= 0
 		// post: constructs an empty vector with initialCapacity capacity
 		// that extends capacity by capacityIncr, or doubles if 0
+		Assert.pre(initialCapacity >= 0, "Nonnegative capacity.");
+		capacityIncrement = capacityIncr;
+		elementData = new Object[initialCapacity];
+		elementCount = 0;
 
 	}
 
@@ -48,12 +56,42 @@ public class Vector<E> extends AbstractList<E> implements Cloneable {
 
 	}
 
-	public boolean add(E obj) {
+	public boolean add(Object obj) {
 		// post: adds new element to end of possibly extended vector
 		ensureCapacity(elementCount + 1);
 		elementData[elementCount] = obj;
 		elementCount++;
 		return true;
+	}
+
+//	public void add(int index, Object obj)
+//	// pre: 0 <= index <= size()
+//	// post: inserts new value in vector with desired index,
+//	// moving elements from index to size()-1 to right
+//	{
+//		int i;
+//		ensureCapacity(elementCount + 1);
+//		// must copy from right to left to avoid destroying data
+//		for (i = elementCount; i > index; i--) {
+//			elementData[i] = elementData[i - 1];
+//		}
+//		// assertion: i == index and element[index] is available
+//		elementData[index] = obj;
+//		elementCount++;
+//	}
+
+	public void add(int index, E value)
+	// pre: 0 <= index <= size()
+	// post: inserts new value in vector with desired index
+	// moving elements from index to size()-1 to right
+	{
+		if (index >= size()) {
+			add(value); // base case: add at end
+		} else {
+			E previous = get(index); // work
+			add(index + 1, previous); // progress through recursion
+			set(index, value); // work
+		}
 	}
 
 	public boolean remove(Object element) {
@@ -128,6 +166,22 @@ public class Vector<E> extends AbstractList<E> implements Cloneable {
 	@Override
 	public int size() {
 		// TODO Auto-generated method stub
-		return 0;
+		return elementCount;
+	}
+
+	public void print()
+	// post: print the elements of the vector
+	{
+		printFrom(0);
+	}
+
+	protected void printFrom(int index)
+	// pre: index <= size()
+	// post: print elements indexed between index and size()
+	{
+		if (index < size()) {
+			System.out.println(get(index));
+			printFrom(index + 1);
+		}
 	}
 }
